@@ -153,6 +153,7 @@ btnLogin.addEventListener("click", function (e) {
   inputLoginPin.blur();
 });
 
+// Transfer money
 btnTransfer.addEventListener("click", function (e) {
   e.preventDefault();
   const amount = Number(inputTransferAmount.value);
@@ -173,6 +174,24 @@ btnTransfer.addEventListener("click", function (e) {
     receiverAcc.movements.push(amount);
 
     updateUI();
+  }
+});
+
+// Delete account
+
+btnClose.addEventListener("click", function (e) {
+  e.preventDefault();
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(
+      (acc) => inputCloseUsername.value === acc.username
+    );
+    accounts.splice(index, 1);
+    containerApp.style.opacity = 0;
+    inputCloseUsername.value = inputClosePin.value = "";
+    labelWelcome.textContent = `Log in to get started`;
   }
 });
 
