@@ -61,10 +61,13 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   // innerHTML including the tag and text while textContent includes only text
   containerMovements.innerHTML = "";
-  movements.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice("").sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `
     <div class="movements__row">
@@ -177,8 +180,20 @@ btnTransfer.addEventListener("click", function (e) {
   }
 });
 
-// Delete account
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1)
+  ) {
+    currentAccount.movements.push(amount);
+    updateUI();
+  }
+  inputLoanAmount.value = "";
+});
 
+// Delete account
 btnClose.addEventListener("click", function (e) {
   e.preventDefault();
   if (
@@ -193,6 +208,13 @@ btnClose.addEventListener("click", function (e) {
     inputCloseUsername.value = inputClosePin.value = "";
     labelWelcome.textContent = `Log in to get started`;
   }
+});
+
+let sorted = false;
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
@@ -540,3 +562,133 @@ for (const account of accounts) {
 console.log(targetAccount);
 
 */
+
+/*
+
+// check for equality ===
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.includes(-130));
+
+// SOME method: condition , return boolean
+
+console.log(movements.some((mov) => mov > 5000));
+
+// EVERY method: all elements has to be true so that it can return true
+console.log(account4.movements.every((mov) => mov > 0));
+
+// Seperate callback
+
+const deposit = (mov) => mov > 0;
+
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+
+*/
+
+/*
+// FLat method: remove the nested array
+
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat(2));
+
+const accMovements = accounts.map((acc) => acc.movements);
+console.log(accMovements);
+
+const allMovements = accMovements.flat();
+
+const overAllBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(overAllBalance);
+
+// Flat Chaining
+
+const overAllBalance2 = accounts
+  .map((acc) => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overAllBalance2);
+
+// flatMap: combine the flat and map method
+
+const overAllBalance3 = accounts
+  .flatMap((acc) => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(overAllBalance3);
+*/
+
+// Sort method
+
+// ------------------- Jonas -------------------
+// Strings
+const owners = ["Jonas", "Zach", "Adam", "Martha"];
+console.log(owners.sort());
+
+// Mutating the original string
+console.log(owners);
+
+// Number:
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// automically convert to string then sort it, result is not what we wanted
+// console.log(movements.sort());
+
+// return < 0, A, B (keep order)
+// return > 0, B, A (switch order)
+
+// Ascending
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return 1;
+//   }
+//   if (a < b) return -1;
+// });
+movements.sort((a, b) => a - b);
+
+console.log(movements);
+
+// Descending
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return -1;
+//   }
+//   if (a < b) return 1;
+// });
+movements.sort((a, b) => b - a);
+
+console.log(movements);
+
+//  ------------------- Youtube video -------------------
+
+// Sorted based on the UTFcode
+const letters = ["b", "P", "c", "a"];
+// letters.forEach((letter) => console.log(letter, " ", letter.charCodeAt(0)));
+
+const numbers = [2, 5, 100, 4];
+
+// if number, coverted to string and sort based on UTF code
+// numbers.forEach((number) => {
+//   console.log(number, " ", String(number).charCodeAt(0));
+// });
+
+const sortedNumber = numbers.sort((a, b) => {
+  // if (a > b) {
+  //   return 1;
+  // } else if (a < b) {
+  //   return -1;
+  // } else {
+  //   return 0;
+  // }
+  return a - b;
+});
+
+/*
+
+2 - 5 = -3
+100 - 4 = 96
+
+*/
+
+console.log(sortedNumber);
